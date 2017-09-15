@@ -1,0 +1,5 @@
+UART TEST: If you can read this, then UART output works!
+
+
+Beginning communication test
+

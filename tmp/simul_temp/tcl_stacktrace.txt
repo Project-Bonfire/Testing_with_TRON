@@ -1,0 +1,31 @@
+Tue Sep 12 16:05:51 EEST 2017
+Trace back: Macro Break
+    while executing
+"macroMark"
+    (procedure "update" line 6)
+    invoked from within
+"update"
+    (procedure "Wave::SelectPane" line 33)
+    invoked from within
+"Wave::SelectPane $winname -pane $pane -setfocus"
+    (object "::.main_pane.wave.interior.cs.body.pw.wf.tree" method "::WaveTree::Activate" body line 9)
+    invoked from within
+".main_pane.wave.interior.cs.body.pw.wf.tree Activate .main_pane.wave"
+    (in namespace inscope "::Wave" script line 1)
+    invoked from within
+"namespace inscope ::Wave {.main_pane.wave.interior.cs.body.pw.wf.tree Activate} .main_pane.wave"
+    ("eval" body line 1)
+    invoked from within
+"eval $itk_option(-activatecommand) $frame_name"
+    (object "::.main_pane.wave" method "::mtiwidgets::WindowObj::Activate" body line 16)
+    invoked from within
+"$windowobj Activate """
+    (object "::.vcop" method "::vsimwidgets::Vcop::ActualActivate" body line 36)
+    invoked from within
+"::.vcop ActualActivate"
+    (in namespace inscope "::vsimwidgets::Vcop" script line 1)
+    invoked from within
+"namespace inscope ::vsimwidgets::Vcop {::.vcop ActualActivate}"
+    ("after" script)
+  <2:/cad/eda/mentor/2015-16/RHELx86/AMS_15.3.1/questasim/v10.4c_1/linux_x86_64/tk8.5/bgerror.tcl:92: ::tkerror {Macro Break}
+  <1:eval:1: ::tk::dialog::error::bgerror {Macro Break}
