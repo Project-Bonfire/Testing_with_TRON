@@ -11,6 +11,7 @@ vcom "../../RTL/Router/FIFO_one_hot_credit_based.vhd"
 vcom "../../RTL/Router/Router_32_bit_credit_based.vhd"
 vcom "TB_package_32_bit_Tron.vhd"
 vcom "network_2x2_NI_Test_Rand_credit_based_tb_tron.vhd"
+vcom "network_2x2_NI_credit_based.vhd"
 
 # Start the simulation
 vsim work.tb_network_2x2
