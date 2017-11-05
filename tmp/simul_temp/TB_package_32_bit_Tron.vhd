@@ -142,9 +142,9 @@ begin
       body_data := to_integer(unsigned(values(57 downto 29)));
     --  tailvalue <= totalvalue(31 downto 0); -- store 32 bit values
       tail_data := to_integer(unsigned(values(28 downto 0)));
-      elsif 
+      elsif (source = source_id) then
       
-	  min_packet_size:= min_packet_size_value;
+      min_packet_size:= min_packet_size_value;
       max_packet_size:= max_packet_size_value;
 
 
