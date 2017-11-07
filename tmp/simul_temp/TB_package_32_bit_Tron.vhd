@@ -90,11 +90,16 @@ package body TB_Package is
                       signal credit_counter_in: in std_logic_vector(1 downto 0);
                       signal valid_out: out std_logic;
                       signal port_in : out std_logic_vector) is
+		      --signal totalvalue : std_logic_vector(68 downto 0);
+                      --signal sourcevalue : in std_logic_vector(1 downto 0);
+                      -- signal destinationvalue : in std_logic_vector(1 downto 0);
+                      -- signal bodyvalue : in std_logic_vector(1 downto 0);
+                      -- signal tailvalue : in std_logic_vector(1 downto 0);
 
                       variable seed1 :positive ;
                       variable seed2 :positive ;
                       variable rand : real ;
-                      variable min_packet_size_value, max_packet_size_value: integer := 3;
+                      constant min_packet_size_value, max_packet_size_value: integer := 3;
                       variable INPUTLINE  : line;
                       variable values     : std_logic_vector(61 downto 0);
                       variable destination_id: integer;
@@ -104,12 +109,7 @@ package body TB_Package is
                       variable id_counter, Packet_length,frame_starting_delay,frame_ending_delay: integer:= 0;
                       variable credit_counter: std_logic_vector (1 downto 0);
                       file file_VECTORS : text open read_mode is “testgen.txt”;
-                     -- signal totalvalue : std_logic_vector(68 downto 0);
-                      --    signal sourcevalue : in std_logic_vector(1 downto 0);
-                      --    signal destinationvalue : in std_logic_vector(1 downto 0);
-                      --    signal bodyvalue : in std_logic_vector(1 downto 0);
-                      --    signal tailvalue : in std_logic_vector(1 downto 0);
-
+                      
 begin
 
 
@@ -127,18 +127,19 @@ begin
     --  tailvalue <= totalvalue(31 downto 0); -- store 32 bit values
       tail_data := to_integer(unsigned(values(28 downto 0)));
 
-      if (source != source_id) then
+      if (source /= source_id) then
 	  readline(file_VECTORS,INPUTLINE);
 	  read(INPUTLINE, values);
 	  
 	  source_id := to_integer(unsigned(values(61 downto 60)));
     -- destinationvalue <= totalvalue(66 downto 65); -- store 2 bit values
-      destination_id := to_integer(unsigned(values(59 downto 58)));
+     	 destination_id := to_integer(unsigned(values(59 downto 58)));
     --  bodyvalue <= totalvalue(64 downto 32); -- store 32 bit values
-      body_data := to_integer(unsigned(values(57 downto 29)));
+     	 body_data := to_integer(unsigned(values(57 downto 29)));
     --  tailvalue <= totalvalue(31 downto 0); -- store 32 bit values
-      tail_data := to_integer(unsigned(values(28 downto 0)));
-      elsif (source = source_id) then
+     	 tail_data := to_integer(unsigned(values(28 downto 0)));
+     
+     elsif (source = source_id) then
       
       min_packet_size:= min_packet_size_value;
       max_packet_size:= max_packet_size_value;
@@ -229,6 +230,7 @@ begin
           if now > finish_time then
               wait;
           end if;
+  end if;			  
    end if;
 end loop;
   end gen_packet_from_file;
