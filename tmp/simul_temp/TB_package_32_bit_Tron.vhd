@@ -20,10 +20,6 @@ package TB_Package is
                                   signal credit_counter_in: in std_logic_vector(1 downto 0);
                                   signal valid_out: out std_logic;
                                   signal port_in: out std_logic_vector);
-  procedure gen_bit_reversed_packet(network_size, frame_length, source, initial_delay, min_packet_size, max_packet_size: in integer;
-                      finish_time: in time; signal clk: in std_logic;
-                      signal credit_counter_in: in std_logic_vector(1 downto 0); signal valid_out: out std_logic;
-                      signal port_in: out std_logic_vector);
   procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer; signal clk: in std_logic;
                      signal credit_out: out std_logic; signal valid_in: in std_logic; signal port_in: in std_logic_vector);
 end TB_Package;
