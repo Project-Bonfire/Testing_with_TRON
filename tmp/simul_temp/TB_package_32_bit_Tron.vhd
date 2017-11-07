@@ -230,7 +230,7 @@ begin
           if now > finish_time then
               wait;
           end if;
-  end if;			  
+   end if;			  
    end if;
 end loop;
   end gen_packet_from_file;
