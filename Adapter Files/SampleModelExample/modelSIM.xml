@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+
+
+const int T_gen = 5; // load stabilization time in the routing system
+const int T_out =6; // Time out T out
+
+chan start, stop, adapStart, fail;
+clock G_cl;</declaration>
+	<template>
+		<name x="5" y="5">IUT</name>
+		<declaration>// Place local declarations here.
+clock cl;</declaration>
+		<location id="id0" x="-110" y="-81">
+			<name x="-120" y="-111">Pass</name>
+		</location>
+		<location id="id1" x="-271" y="-15">
+			<name x="-316" y="-59">Measuring</name>
+			<label kind="invariant" x="-311" y="-47">cl&lt;=200</label>
+		</location>
+		<location id="id2" x="-454" y="-15">
+			<name x="-477" y="-57">Wait</name>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="-270" y="-135">stop!</label>
+			<nail x="-288" y="-159"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-358" y="67">cl&lt;=200</label>
+			<label kind="assignment" x="-351" y="78">cl:=0</label>
+			<nail x="-212" y="61"/>
+			<nail x="-387" y="63"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-222" y="-84">cl&gt;=200</label>
+			<label kind="assignment" x="-253" y="-48">cl:=0</label>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="synchronisation" x="-392" y="-35">adapStart?</label>
+			<label kind="assignment" x="-387" y="-14">cl:=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>ENV</name>
+		<location id="id3" x="-166" y="-72">
+			<name x="-142" y="-88">idle</name>
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-299" y="-89">fail?</label>
+			<nail x="-190" y="-76"/>
+			<nail x="-264" y="-90"/>
+			<nail x="-259" y="-47"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-182" y="-32">start!</label>
+			<nail x="-198" y="-32"/>
+			<nail x="-134" y="-32"/>
+		</transition>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-206" y="-128">stop?</label>
+			<nail x="-198" y="-104"/>
+			<nail x="-134" y="-104"/>
+		</transition>
+	</template>
+	<template>
+		<name>Adapter</name>
+		<location id="id4" x="32" y="-48">
+			<urgent/>
+		</location>
+		<location id="id5" x="-64" y="-48">
+		</location>
+		<init ref="id5"/>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id5"/>
+			<label kind="synchronisation" x="-51" y="-11">adapStart!</label>
+			<nail x="8" y="-16"/>
+			<nail x="-40" y="-16"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="synchronisation" x="-32" y="-96">start?</label>
+			<nail x="-40" y="-80"/>
+			<nail x="8" y="-80"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+
+// List one or more processes to be composed into a system.
+system IUT, ENV, Adapter;</system>
+</nta>
