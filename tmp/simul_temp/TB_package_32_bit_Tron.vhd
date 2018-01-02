@@ -8,57 +8,70 @@ use IEEE.NUMERIC_STD.all;
  use ieee.std_logic_misc.all;
 
 package TB_Package is
-  function Header_gen(Packet_length, source, destination, packet_id: integer ) return std_logic_vector ;
-  function Body_gen(Packet_length, Data: integer ) return std_logic_vector ;
-  function Tail_gen(Packet_length, Data: integer ) return std_logic_vector ;
+	
+ -- function Header_gen(Packet_length, source, destination, packet_id: integer ) return std_logic_vector ;
+ -- function Body_gen(Packet_length, Data: integer ) return std_logic_vector ;
+ -- function Tail_gen(Packet_length, Data: integer ) return std_logic_vector ;
+  
+  function Packet_read(source, destination, Data: integer ) return std_logic_vector ;
+  
+	
   procedure credit_counter_control(signal clk: in std_logic;
-                                 signal credit_in: in std_logic; signal valid_out: in std_logic;
-                                 signal credit_counter_out: out std_logic_vector(1 downto 0));
-  procedure gen_packet_from_file(network_size, frame_length, source, initial_delay, min_packet_size, max_packet_size: in integer;
-                                  finish_time: in time;
+                                   signal credit_in: in std_logic; 
+				   signal valid_out: in std_logic;
+                                   signal credit_counter_out: out std_logic_vector(1 downto 0));
+
+  procedure gen_packet_from_file(network_size, frame_length, initial_delay, min_packet_size, max_packet_size: in integer; finish_time: in time;
                                   signal clk: in std_logic;
                                   signal credit_counter_in: in std_logic_vector(1 downto 0);
                                   signal valid_out: out std_logic;
                                   signal port_in: out std_logic_vector);
+
   procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer; signal clk: in std_logic;
                      signal credit_out: out std_logic; signal valid_in: in std_logic; signal port_in: in std_logic_vector);
+
 end TB_Package;
 
 package body TB_Package is
+	
   constant Header_type : std_logic_vector := "001";
-  constant Body_type : std_logic_vector := "010";
-  constant Tail_type : std_logic_vector := "100";
+  constant Body_type   : std_logic_vector := "010";
+  constant Tail_type   : std_logic_vector := "100";
 
-  function Header_gen(Packet_length, source, destination, packet_id: integer)
-              return std_logic_vector is
-    	variable Header_flit: std_logic_vector (31 downto 0);
-    	begin
-    	Header_flit := Header_type &  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination, 4)) &
-                   std_logic_vector(to_unsigned(source, 4))  & std_logic_vector(to_unsigned(packet_id, 8)) & XOR_REDUCE(Header_type &
-                   std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination, 4)) &
-                   std_logic_vector(to_unsigned(source, 4))  & std_logic_vector(to_unsigned(packet_id, 8)));
-    return Header_flit;
-  end Header_gen;
-
-
-  function Body_gen(Packet_length, Data: integer)
-                return std_logic_vector is
-    variable Body_flit: std_logic_vector (31 downto 0);
-    begin
-    Body_flit := Body_type &  std_logic_vector(to_unsigned(Data, 28)) & XOR_REDUCE(Body_type & std_logic_vector(to_unsigned(Data, 28)));
-    return Body_flit;
-  end Body_gen;
+ --function Header_gen(Packet_length, source, destination, packet_id: integer)
+ --            return std_logic_vector is
+ --   	variable Header_flit: std_logic_vector (31 downto 0);
+ --   	begin
+ --   	Header_flit := Header_type &  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination, 4)) &
+ --                  std_logic_vector(to_unsigned(source, 4))  & std_logic_vector(to_unsigned(packet_id, 8)) & XOR_REDUCE(Header_type &
+ --                  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination, 4)) &
+ --                  std_logic_vector(to_unsigned(source, 4))  & std_logic_vector(to_unsigned(packet_id, 8)));
+ --   return Header_flit;
+ -- end Header_gen;/%
 
 
-  function Tail_gen(Packet_length, Data: integer)
-                return std_logic_vector is
-    variable Tail_flit: std_logic_vector (31 downto 0);
-    begin
-    Tail_flit := Tail_type &  std_logic_vector(to_unsigned(Data, 28)) & XOR_REDUCE(Tail_type & std_logic_vector(to_unsigned(Data, 28)));
-    return Tail_flit;
-  end Tail_gen;
+ -- function Body_gen(Packet_length, Data: integer)
+ --               return std_logic_vector is
+ --   variable Body_flit: std_logic_vector (31 downto 0);
+ --   begin
+ --   Body_flit := Body_type &  std_logic_vector(to_unsigned(Data, 28)) & XOR_REDUCE(Body_type & std_logic_vector(to_unsigned(Data, 28)));
+ --   return Body_flit;
+ -- end Body_gen;
 
-  procedure credit_counter_control(
+
+  --function Tail_gen(Packet_length, Data: integer)
+ --              return std_logic_vector is
+ --   variable Tail_flit: std_logic_vector (31 downto 0);
+ --   begin
+ --   Tail_flit := Tail_type &  std_logic_vector(to_unsigned(Data, 28)) & XOR_REDUCE(Tail_type & std_logic_vector(to_unsigned(Data, 28)));
+ --   return Tail_flit;
+ -- end Tail_gen;
+
+ function Packet_read(source, destination, Data: integer ) 
+	 return std_logic_vector is
+  
+	 
+	 procedure credit_counter_control(
           signal clk: in std_logic;
           signal credit_in : in std_logic;
           signal valid_out : in std_logic;
