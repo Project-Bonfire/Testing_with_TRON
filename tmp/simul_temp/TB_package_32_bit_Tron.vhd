@@ -264,9 +264,8 @@ begin
           if now > finish_time then
               wait;
           end if;
-   end if;			  
-   end if;
-end loop;
+ 
+--end loop;
   end gen_packet_from_file;
 
   procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer;
