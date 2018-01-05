@@ -96,7 +96,7 @@ begin
 -- store 32 bit values
       tail_data := to_integer(unsigned(values(28 downto 0)));
 
-   
+----------------------------------------------------------------------   
       valid_out <= '0';
       port_in <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" ;
       wait until clk'event and clk ='1';
@@ -105,11 +105,7 @@ begin
       end loop;
       port_in <= "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU" ;
 
-      --generating the frame initial delay
-      --uniform(seed1, seed2, rand);
-      --frame_starting_delay := 0;
-      --generating the frame ending delay
-      --frame_ending_delay := frame_length - (Packet_length+frame_starting_delay);
+-----------------------------------------------------------------
 
       wait until clk'event and clk ='0';
       valid_out <= '0';
@@ -117,17 +113,10 @@ begin
       while credit_counter_in = 0 loop
         wait until clk'event and clk ='0';
       end loop;
------------------------------------------------------------
-    -- generating the packet what we need id counter for
-    --  id_counter := id_counter + 1;
-    --  if id_counter = 256 then
-    --     id_counter := 0;
-    --  end if;
-  --------------------------------------
-    
+ ---------------------------------------------------------------------   
  
           wait until clk'event and clk ='0'; -- On negative edge of clk (for syncing purposes)
-             --   port_in <= Header_gen(Packet_length, source_id, destination_id, id_counter); -- Generating the header flit of the packet (All packets have a header flit)! not using it as we donot use function we insert direct values
+         
 	          port_in <= Header_type &  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination_id, 4)) &
                    std_logic_vector(to_unsigned(source_id, 4)) & XOR_REDUCE(Header_type &
                    std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination_id, 4)) &
@@ -135,9 +124,6 @@ begin
 
 			  valid_out <= '1';
   --------------------------------------
-			--for I in 0 to 3 loop (we comment this because so far we have only one body)
-              -- The reason for -3 is that we have packet length of Packet_length, now if you exclude header and tail
-              -- it would be Packet_length-2 to enumerate them, you can count from 0 to Packet_length-3.
 			  
 			  
             if credit_counter_in = "00" then
@@ -146,15 +132,15 @@ begin
                wait until credit_counter_in'event and credit_counter_in > 0;
                wait until clk'event and clk ='0';
             end if;
-			  
+-------------------------------------------------------------------			  
 			wait until clk'event and clk ='0';
-               -- port_in <= Body_gen(Packet_length,body_data); -- here we send the body
+         
 			port_in <= Body_type &  std_logic_vector(to_unsigned(body_data, 28)) & XOR_REDUCE(Body_type & std_logic_vector(to_unsigned(body_data, 28)));
             
 			valid_out <= '1';
 			wait until clk'event and clk ='0';
 			
-   -- end loop;		
+ 	
   --------------------------------------
 			 if credit_counter_in = "00" then
 				 valid_out <= '0';
@@ -163,7 +149,7 @@ begin
 				 wait until clk'event and clk ='0';
 			end if;
 -----------------------------------------
-         -- port_in <= Tail_gen(Packet_length, tail_data);
+  
               
 			port_in <=  Tail_type &  std_logic_vector(to_unsigned(tail_data, 28)) & XOR_REDUCE(Tail_type & std_logic_vector(to_unsigned(tail_data, 28)));
 			valid_out <= '1';
@@ -215,14 +201,14 @@ begin
                 counter := counter+1;
              	tail_data_read := to_integer(unsigned(port_in(28 downto 1)));
 
-report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
-assert (P_length=counter) report "wrong packet size" severity warning;
+report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) & "with tail:" & integer'image(tail_data_read);
             
 write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
 writeline(VEC_FILE, LINEVARIABLE);
 	
       else
-	assert(Node_ID != source_node) report "wrong packet source" severity failure;
+	write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
+	writeline(VEC_FILE, LINEVARIABLE);
               end if;
                counter := 0;
             end if;
