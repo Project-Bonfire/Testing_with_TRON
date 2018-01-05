@@ -173,9 +173,9 @@ begin
                        signal valid_in: in std_logic;
                        signal port_in: in std_logic_vector;
                        signal credit_out: out std_logic ) is
-						variable source_node, destination_node, P_length, packet_id, counter, body_data_read, tail_data_read: integer;
-						variable LINEVARIABLE : line;
-						file VEC_FILE : text is out "outputfile.txt";
+			variable source_node, destination_node, P_length, packet_id, counter, body_data_read, tail_data_read: integer;
+			variable LINEVARIABLE : line;
+			file VEC_FILE : text is out "outputfile.txt";
   
      begin
      credit_out <= '1';
@@ -198,20 +198,20 @@ begin
               end if;
 			  
 		if (port_in(DATA_WIDTH-1 downto DATA_WIDTH-3) = "100") then
-                counter := counter+1;
-             	tail_data_read := to_integer(unsigned(port_in(28 downto 1)));
+                	counter := counter+1;
+             		tail_data_read := to_integer(unsigned(port_in(28 downto 1)));
 
-report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) & "with tail:" & integer'image(tail_data_read);
+			report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) & "with tail:" & integer'image(tail_data_read);
             
-write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
-writeline(VEC_FILE, LINEVARIABLE);
+			write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
+			writeline(VEC_FILE, LINEVARIABLE);
 	
-      else
-	write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
-	writeline(VEC_FILE, LINEVARIABLE);
+      		else
+			write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read);
+			writeline(VEC_FILE, LINEVARIABLE);
               end if;
-               counter := 0;
-            end if;
+              		 counter := 0;
+       end if;
          
   end get_packet;
 
