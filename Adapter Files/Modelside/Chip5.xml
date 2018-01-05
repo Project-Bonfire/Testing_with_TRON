@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'>
+<nta>
+	<declaration>// ----- global declarations ----- 
+const int M= 4;              //  Number of routers
+const int UB=5, LB=3;        // common clock constants LB - lower bound of the tick, UB - upper bound of the tick
+//typedef int[1,M] id_t;     // type for Rooter identifiers
+chan start, stop;
+// router internal channel
+broadcast chan tct;
+// io channels between processors and routers
+chan i_ch_i1, i_ch_i2, i_ch_i3, i_ch_i4;  // routers' input channels
+chan o_ch_o1, o_ch_o2, o_ch_o3, o_ch_o4;  // routers' output channels
+// Routing system input/output variables transmitted between processors
+int i1, o1,i2, o2, i3, o3, i4, o4;
+// each buffer has length 2; 1st element denoted Bxy and second by BBxy, where x,y in [1,4]
+// the empty buffer value is 0, nonempty is 1-4
+int B11, BB11;
+int B22, BB22;
+int B33, BB33;
+int B44, BB44;
+int B12, BB12;
+int B21, BB21;
+int B23, BB23;
+int B32, BB32;
+int B34, BB34;
+int B43, BB43;
+int B41, BB41;
+int B14, BB14;
+
+</declaration>
+	<template>
+		<name x="5" y="5">Processor1_sender</name>
+		<declaration>// Place local declarations here.
+int id=1;
+clock cl;
+int to;</declaration>
+		<location id="id0" x="170" y="0">
+			<name x="160" y="-34">send</name>
+		</location>
+		<location id="id1" x="76" y="0">
+			<committed/>
+		</location>
+		<location id="id2" x="0" y="0">
+			<name x="-10" y="-34">wait</name>
+			<label kind="invariant" x="-59" y="8">cl &lt;= UB</label>
+		</location>
+		<init ref="id2"/>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="110" y="8">i1=4</label>
+			<nail x="93" y="25"/>
+			<nail x="153" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="108" y="-17">i1=2</label>
+			<nail x="93" y="-25"/>
+			<nail x="153" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id1"/>
+			<target ref="id0"/>
+			<label kind="assignment" x="109" y="-46">i1=3</label>
+		</transition>
+		<transition>
+			<source ref="id0"/>
+			<target ref="id2"/>
+			<label kind="synchronisation" x="25" y="40">i_ch_i1!</label>
+			<label kind="assignment" x="68" y="17">cl=0, to:=i1</label>
+			<nail x="170" y="34"/>
+			<nail x="0" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id2"/>
+			<target ref="id1"/>
+			<label kind="guard" x="17" y="-25">cl&gt;= LB</label>
+		</transition>
+	</template>
+	<template>
+		<name>Processor1_receiver</name>
+		<location id="id3" x="0" y="0">
+		</location>
+		<init ref="id3"/>
+		<transition>
+			<source ref="id3"/>
+			<target ref="id3"/>
+			<label kind="synchronisation" x="-16" y="-85">o_ch_o1?</label>
+			<nail x="-34" y="-68"/>
+			<nail x="34" y="-68"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Processor2_sender</name>
+		<declaration>// Place local declarations here.
+int id=1;
+clock cl;
+int to;</declaration>
+		<location id="id4" x="170" y="0">
+			<name x="160" y="-34">send</name>
+		</location>
+		<location id="id5" x="76" y="0">
+			<committed/>
+		</location>
+		<location id="id6" x="0" y="0">
+			<name x="-10" y="-34">wait</name>
+			<label kind="invariant" x="-59" y="8">cl &lt;= UB</label>
+		</location>
+		<init ref="id6"/>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="110" y="8">i2=4</label>
+			<nail x="93" y="25"/>
+			<nail x="153" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="110" y="-42">i2=1</label>
+			<nail x="93" y="-25"/>
+			<nail x="153" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id5"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="110" y="-17">i2=3</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id6"/>
+			<label kind="synchronisation" x="26" y="39">i_ch_i2!</label>
+			<label kind="assignment" x="59" y="17">cl=0, to:=i2</label>
+			<nail x="170" y="34"/>
+			<nail x="0" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="17" y="-25">cl&gt;= LB</label>
+		</transition>
+	</template>
+	<template>
+		<name>Processor2_receiver</name>
+		<location id="id7" x="0" y="0">
+		</location>
+		<init ref="id7"/>
+		<transition>
+			<source ref="id7"/>
+			<target ref="id7"/>
+			<label kind="synchronisation" x="-16" y="-85">o_ch_o2?</label>
+			<nail x="-34" y="-68"/>
+			<nail x="34" y="-68"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Processor3_sender</name>
+		<declaration>// Place local declarations here.
+int id=1;
+clock cl;
+int to;</declaration>
+		<location id="id8" x="170" y="0">
+			<name x="160" y="-34">send</name>
+		</location>
+		<location id="id9" x="76" y="0">
+			<committed/>
+		</location>
+		<location id="id10" x="0" y="0">
+			<name x="-10" y="-34">wait</name>
+			<label kind="invariant" x="-59" y="8">cl &lt;= UB</label>
+		</location>
+		<init ref="id10"/>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="110" y="8">i3=4</label>
+			<nail x="93" y="25"/>
+			<nail x="153" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="110" y="-42">i3=2</label>
+			<nail x="93" y="-25"/>
+			<nail x="153" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id8"/>
+			<label kind="assignment" x="105" y="-100">i3=1</label>
+		</transition>
+		<transition>
+			<source ref="id8"/>
+			<target ref="id10"/>
+			<label kind="synchronisation" x="17" y="17">i_ch_i3!</label>
+			<label kind="assignment" x="68" y="17">cl=0, to:=i3</label>
+			<nail x="170" y="34"/>
+			<nail x="0" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id10"/>
+			<target ref="id9"/>
+			<label kind="guard" x="17" y="-25">cl&gt;= LB</label>
+		</transition>
+	</template>
+	<template>
+		<name>Processor3_receiver</name>
+		<location id="id11" x="0" y="0">
+		</location>
+		<init ref="id11"/>
+		<transition>
+			<source ref="id11"/>
+			<target ref="id11"/>
+			<label kind="synchronisation" x="-25" y="-85">o_ch_o3?</label>
+			<nail x="-34" y="-68"/>
+			<nail x="34" y="-68"/>
+		</transition>
+	</template>
+	<template>
+		<name x="5" y="5">Processor4_sender</name>
+		<declaration>// Place local declarations here.
+int id=1;
+clock cl;
+int to;</declaration>
+		<location id="id12" x="170" y="0">
+			<name x="160" y="-34">send</name>
+		</location>
+		<location id="id13" x="76" y="0">
+			<committed/>
+		</location>
+		<location id="id14" x="0" y="0">
+			<name x="-10" y="-34">wait</name>
+			<label kind="invariant" x="-59" y="8">cl &lt;= UB</label>
+		</location>
+		<init ref="id14"/>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="assignment" x="110" y="8">i4=3</label>
+			<nail x="93" y="25"/>
+			<nail x="153" y="25"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="assignment" x="110" y="-42">i4=1</label>
+			<nail x="93" y="-25"/>
+			<nail x="153" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id13"/>
+			<target ref="id12"/>
+			<label kind="assignment" x="110" y="-17">i4=2</label>
+		</transition>
+		<transition>
+			<source ref="id12"/>
+			<target ref="id14"/>
+			<label kind="synchronisation" x="17" y="17">i_ch_i4!</label>
+			<label kind="assignment" x="68" y="17">cl=0, to:=i4</label>
+			<nail x="170" y="34"/>
+			<nail x="0" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id14"/>
+			<target ref="id13"/>
+			<label kind="guard" x="17" y="-25">cl&gt;= LB</label>
+		</transition>
+	</template>
+	<template>
+		<name>Processor4_receiver</name>
+		<location id="id15" x="0" y="0">
+		</location>
+		<init ref="id15"/>
+		<transition>
+			<source ref="id15"/>
+			<target ref="id15"/>
+			<label kind="synchronisation" x="-16" y="-85">o_ch_o4?</label>
+			<nail x="-34" y="-68"/>
+			<nail x="34" y="-68"/>
+		</transition>
+	</template>
+	<template>
+		<name>Tact_gen</name>
+		<declaration>clock cl;
+const int Tact=1;</declaration>
+		<location id="id16" x="-408" y="-204">
+			<committed/>
+		</location>
+		<location id="id17" x="-544" y="-204">
+			<label kind="invariant" x="-569" y="-187">cl&lt;=Tact</label>
+		</location>
+		<init ref="id17"/>
+		<transition>
+			<source ref="id16"/>
+			<target ref="id17"/>
+			<label kind="synchronisation" x="-484" y="-204">tct!</label>
+			<label kind="assignment" x="-493" y="-187">cl=0</label>
+			<nail x="-476" y="-187"/>
+		</transition>
+		<transition>
+			<source ref="id17"/>
+			<target ref="id16"/>
+			<label kind="guard" x="-510" y="-255">cl&gt;= Tact</label>
+			<label kind="synchronisation" x="-493" y="-238">tct!</label>
+			<nail x="-476" y="-221"/>
+		</transition>
+	</template>
+	<template>
+		<name>LINK11</name>
+		<declaration>
+int val;</declaration>
+		<location id="id18" x="-136" y="-68">
+			<committed/>
+		</location>
+		<location id="id19" x="-34" y="-68">
+			<name x="-42" y="-102">s1</name>
+		</location>
+		<location id="id20" x="170" y="-68">
+			<name x="170" y="-102">s2</name>
+			<committed/>
+		</location>
+		<location id="id21" x="-340" y="-68">
+			<name x="-365" y="-102">Wait</name>
+		</location>
+		<init ref="id21"/>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id18"/>
+			<label kind="guard" x="-255" y="-85">i1==0</label>
+			<label kind="synchronisation" x="-297" y="-85">tct?</label>
+		</transition>
+		<transition>
+			<source ref="id21"/>
+			<target ref="id18"/>
+			<label kind="synchronisation" x="-323" y="-153">i_ch_i1?</label>
+			<label kind="assignment" x="-323" y="-136">BB11=(B11 &gt;0?i1:BB11),
+B11 =(B11==0?i1:B11),i1=0</label>
+			<nail x="-331" y="-93"/>
+			<nail x="-153" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="guard" x="34" y="-93">val==4</label>
+			<label kind="synchronisation" x="-8" y="-93">tct?</label>
+			<label kind="assignment" x="-8" y="-76">BB14=(B14&gt;0? val:BB14),
+B14=(B14==0? val:B14)</label>
+			<nail x="-17" y="-34"/>
+			<nail x="144" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id20"/>
+			<label kind="guard" x="34" y="-153">val==2 || val==3</label>
+			<label kind="synchronisation" x="-8" y="-153">tct?</label>
+			<label kind="assignment" x="-8" y="-136">BB12=(B12&gt;0? val:BB12),
+B12=(B12==0? val:B12)</label>
+			<nail x="-8" y="-93"/>
+			<nail x="144" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id20"/>
+			<target ref="id21"/>
+			<nail x="158" y="1"/>
+			<nail x="-335" y="1"/>
+		</transition>
+		<transition>
+			<source ref="id19"/>
+			<target ref="id21"/>
+			<label kind="guard" x="-212" y="-51">val==0 || val==1</label>
+			<label kind="synchronisation" x="-255" y="-51">tct?</label>
+			<nail x="-51" y="-34"/>
+			<nail x="-168" y="-29"/>
+			<nail x="-305" y="-43"/>
+		</transition>
+		<transition>
+			<source ref="id18"/>
+			<target ref="id19"/>
+			<label kind="assignment" x="-119" y="-127">val=B11,
+B11=BB11,
+BB11=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK22</name>
+		<declaration>int val;</declaration>
+		<location id="id22" x="-136" y="-68">
+			<committed/>
+		</location>
+		<location id="id23" x="-34" y="-68">
+			<name x="-42" y="-102">s1</name>
+		</location>
+		<location id="id24" x="170" y="-68">
+			<name x="178" y="-102">s2</name>
+			<committed/>
+		</location>
+		<location id="id25" x="-314" y="-68">
+			<name x="-348" y="-102">Wait</name>
+		</location>
+		<init ref="id25"/>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id22"/>
+			<label kind="synchronisation" x="-306" y="-161">i_ch_i2?</label>
+			<label kind="assignment" x="-306" y="-144">BB22=(B22 &gt;0?i2:BB22),
+B22 =(B22==0?i2:B22),i2=0</label>
+			<nail x="-306" y="-102"/>
+			<nail x="-144" y="-102"/>
+		</transition>
+		<transition>
+			<source ref="id25"/>
+			<target ref="id22"/>
+			<label kind="guard" x="-212" y="-85">i2==0</label>
+			<label kind="synchronisation" x="-255" y="-85">tct?</label>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="guard" x="68" y="-85">val==1</label>
+			<label kind="synchronisation" x="0" y="-85">tct?</label>
+			<label kind="assignment" x="-8" y="-68">BB21=(B21&gt;0? val:BB21),
+B21=(B21==0? val:B21)</label>
+			<nail x="-17" y="-34"/>
+			<nail x="144" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id24"/>
+			<label kind="guard" x="34" y="-153">val==3 || val==4</label>
+			<label kind="synchronisation" x="0" y="-153">tct?</label>
+			<label kind="assignment" x="-8" y="-136">BB23=(B23&gt;0? val:BB23),
+B23=(B23==0? val:B23)</label>
+			<nail x="-8" y="-93"/>
+			<nail x="153" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id24"/>
+			<target ref="id25"/>
+			<nail x="153" y="-17"/>
+			<nail x="-297" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id23"/>
+			<target ref="id25"/>
+			<label kind="guard" x="-221" y="-51">val==0 || val==2</label>
+			<label kind="synchronisation" x="-255" y="-51">tct?</label>
+			<nail x="-59" y="-34"/>
+			<nail x="-184" y="-33"/>
+		</transition>
+		<transition>
+			<source ref="id22"/>
+			<target ref="id23"/>
+			<label kind="assignment" x="-119" y="-127">val=B22,
+B22=BB22,
+BB22=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK33</name>
+		<declaration>int val;</declaration>
+		<location id="id26" x="-127" y="-68">
+			<committed/>
+		</location>
+		<location id="id27" x="-34" y="-68">
+			<name x="-42" y="-102">s1</name>
+		</location>
+		<location id="id28" x="170" y="-68">
+			<name x="178" y="-102">s2</name>
+			<committed/>
+		</location>
+		<location id="id29" x="-306" y="-68">
+			<name x="-348" y="-93">Wait</name>
+		</location>
+		<init ref="id29"/>
+		<transition>
+			<source ref="id29"/>
+			<target ref="id26"/>
+			<label kind="synchronisation" x="-306" y="-153">i_ch_i3?</label>
+			<label kind="assignment" x="-306" y="-136">BB33=(B33 &gt;0?i3:BB33),
+B33 =(B33==0?i3:B33),i3=0</label>
+			<nail x="-297" y="-93"/>
+			<nail x="-144" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id29"/>
+			<target ref="id26"/>
+			<label kind="guard" x="-229" y="-85">i3==0</label>
+			<label kind="synchronisation" x="-263" y="-85">tct?</label>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id28"/>
+			<label kind="guard" x="43" y="-93">val==2</label>
+			<label kind="synchronisation" x="-8" y="-93">tct?</label>
+			<label kind="assignment" x="-8" y="-76">BB32=(B32&gt;0? val:BB32),
+B32=(B32==0? val:B32)</label>
+			<nail x="-16" y="-34"/>
+			<nail x="153" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id28"/>
+			<label kind="guard" x="25" y="-153">val==4 || val==1</label>
+			<label kind="synchronisation" x="-8" y="-153">tct?</label>
+			<label kind="assignment" x="-8" y="-136">BB34=(B34&gt;0? val:BB34),
+B34=(B34==0? val:B34)</label>
+			<nail x="-8" y="-93"/>
+			<nail x="153" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id28"/>
+			<target ref="id29"/>
+			<nail x="161" y="-17"/>
+			<nail x="-297" y="-17"/>
+		</transition>
+		<transition>
+			<source ref="id27"/>
+			<target ref="id29"/>
+			<label kind="guard" x="-161" y="-51">val==0 || val==3</label>
+			<label kind="synchronisation" x="-212" y="-51">tct?</label>
+			<nail x="-51" y="-34"/>
+			<nail x="-203" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id26"/>
+			<target ref="id27"/>
+			<label kind="assignment" x="-110" y="-127">val=B33,
+B33=BB33,
+BB33=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK44</name>
+		<declaration>int val;</declaration>
+		<location id="id30" x="-170" y="-68">
+			<committed/>
+		</location>
+		<location id="id31" x="-51" y="-68">
+			<name x="-59" y="-102">s1</name>
+		</location>
+		<location id="id32" x="170" y="-68">
+			<name x="170" y="-102">s2</name>
+			<committed/>
+		</location>
+		<location id="id33" x="-348" y="-68">
+			<name x="-382" y="-102">Wait</name>
+		</location>
+		<init ref="id33"/>
+		<transition>
+			<source ref="id33"/>
+			<target ref="id30"/>
+			<label kind="synchronisation" x="-348" y="-153">i_ch_i4?</label>
+			<label kind="assignment" x="-340" y="-136">BB44=(B44 &gt;0?i4:BB44),
+B44 =(B44==0?i4:B44),i4=0</label>
+			<nail x="-331" y="-93"/>
+			<nail x="-178" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id33"/>
+			<target ref="id30"/>
+			<label kind="guard" x="-263" y="-85">i4==0</label>
+			<label kind="synchronisation" x="-306" y="-85">tct?</label>
+		</transition>
+		<transition>
+			<source ref="id31"/>
+			<target ref="id32"/>
+			<label kind="guard" x="25" y="-93">val==3</label>
+			<label kind="synchronisation" x="-17" y="-93">tct?</label>
+			<label kind="assignment" x="-17" y="-76">BB43=(B43&gt;0? val:BB43),
+B43=(B43==0? val:B43)</label>
+			<nail x="-34" y="-34"/>
+			<nail x="144" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id31"/>
+			<target ref="id32"/>
+			<label kind="guard" x="25" y="-153">val==1 || val==2</label>
+			<label kind="synchronisation" x="-17" y="-153">tct?</label>
+			<label kind="assignment" x="-17" y="-136">BB41=(B41&gt;0? val:BB41),
+B41=(B41==0? val:B41)</label>
+			<nail x="-34" y="-93"/>
+			<nail x="144" y="-93"/>
+		</transition>
+		<transition>
+			<source ref="id32"/>
+			<target ref="id33"/>
+			<nail x="161" y="-25"/>
+			<nail x="-340" y="-25"/>
+		</transition>
+		<transition>
+			<source ref="id31"/>
+			<target ref="id33"/>
+			<label kind="guard" x="-187" y="-51">val==0 || val==4</label>
+			<label kind="synchronisation" x="-229" y="-51">tct?</label>
+			<nail x="-76" y="-34"/>
+			<nail x="-252" y="-41"/>
+		</transition>
+		<transition>
+			<source ref="id30"/>
+			<target ref="id31"/>
+			<label kind="assignment" x="-144" y="-127">val=B44,
+B44=BB44,
+BB44=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK12</name>
+		<declaration>
+int val;</declaration>
+		<location id="id34" x="-51" y="-161">
+			<committed/>
+		</location>
+		<location id="id35" x="68" y="-68">
+			<name x="68" y="-102">s1</name>
+		</location>
+		<location id="id36" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id36"/>
+		<transition>
+			<source ref="id34"/>
+			<target ref="id36"/>
+			<label kind="synchronisation" x="-118" y="-179">o_ch_o2?</label>
+			<nail x="-136" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id35"/>
+			<target ref="id34"/>
+			<label kind="guard" x="8" y="-178">val==2</label>
+			<label kind="synchronisation" x="-25" y="-178">tct?</label>
+			<label kind="assignment" x="-8" y="-161">o2=true</label>
+			<nail x="59" y="-161"/>
+		</transition>
+		<transition>
+			<source ref="id35"/>
+			<target ref="id36"/>
+			<label kind="guard" x="-76" y="-59">val==3 || val==4</label>
+			<label kind="synchronisation" x="-119" y="-59">tct?</label>
+			<label kind="assignment" x="-119" y="-42">BB23=(B23&gt;0? val:BB23),
+B23=(B23==0? val:B23)</label>
+			<nail x="59" y="0"/>
+			<nail x="-136" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id35"/>
+			<target ref="id36"/>
+			<label kind="guard" x="-68" y="-136">val==0 || val==1</label>
+			<label kind="synchronisation" x="-119" y="-136">tct?</label>
+			<nail x="51" y="-119"/>
+			<nail x="-127" y="-119"/>
+		</transition>
+		<transition>
+			<source ref="id36"/>
+			<target ref="id35"/>
+			<label kind="synchronisation" x="-119" y="-110">tct?</label>
+			<label kind="assignment" x="-127" y="-93">val=B12,B12=BB12,BB12=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK21</name>
+		<declaration>
+int val;</declaration>
+		<location id="id37" x="-51" y="-170">
+			<committed/>
+		</location>
+		<location id="id38" x="51" y="-68">
+			<name x="26" y="-93">s1</name>
+		</location>
+		<location id="id39" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id39"/>
+		<transition>
+			<source ref="id37"/>
+			<target ref="id39"/>
+			<label kind="synchronisation" x="-118" y="-187">o_ch_o1?</label>
+			<nail x="-136" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id38"/>
+			<target ref="id37"/>
+			<label kind="guard" x="8" y="-187">val==1</label>
+			<label kind="synchronisation" x="-25" y="-187">tct?</label>
+			<label kind="assignment" x="-17" y="-170">o1= true</label>
+			<nail x="42" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id38"/>
+			<target ref="id39"/>
+			<label kind="guard" x="-93" y="-68">val==3 || val==4</label>
+			<label kind="synchronisation" x="-127" y="-68">tct?</label>
+			<label kind="assignment" x="-127" y="-51">BB14=(B14&gt;0? val:BB14),
+B14=(B14==0? val:B14)</label>
+			<nail x="42" y="-8"/>
+			<nail x="-136" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id38"/>
+			<target ref="id39"/>
+			<label kind="guard" x="-93" y="-144">val==0 || val==2</label>
+			<label kind="synchronisation" x="-127" y="-144">tct?</label>
+			<nail x="42" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id39"/>
+			<target ref="id38"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-68" y="-127">val=B21,
+B21=BB21,
+BB21=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK32</name>
+		<declaration>
+int val;</declaration>
+		<location id="id40" x="-59" y="-170">
+			<committed/>
+		</location>
+		<location id="id41" x="42" y="-68">
+			<name x="42" y="-102">s1</name>
+		</location>
+		<location id="id42" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id42"/>
+		<transition>
+			<source ref="id40"/>
+			<target ref="id42"/>
+			<label kind="synchronisation" x="-126" y="-187">o_ch_o2?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id41"/>
+			<target ref="id40"/>
+			<label kind="guard" x="0" y="-187">val==2</label>
+			<label kind="synchronisation" x="-34" y="-187">tct?</label>
+			<label kind="assignment" x="-25" y="-170">o2=true</label>
+			<nail x="42" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id41"/>
+			<target ref="id42"/>
+			<label kind="guard" x="-85" y="-59">val==1 || val==4</label>
+			<label kind="synchronisation" x="-127" y="-59">tct?</label>
+			<label kind="assignment" x="-127" y="-42">BB21=(B21&gt;0? val:BB21),
+B21=(B21==0? val:B21)</label>
+			<nail x="34" y="0"/>
+			<nail x="-136" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id41"/>
+			<target ref="id42"/>
+			<label kind="guard" x="-102" y="-153">val==0 || val==3</label>
+			<label kind="synchronisation" x="-136" y="-153">tct?</label>
+			<nail x="34" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id42"/>
+			<target ref="id41"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-85" y="-127">val=B32,
+B32=BB32,
+BB32=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK23</name>
+		<declaration>
+int val;</declaration>
+		<location id="id43" x="-51" y="-170">
+			<committed/>
+		</location>
+		<location id="id44" x="51" y="-68">
+			<name x="26" y="-93">s1</name>
+		</location>
+		<location id="id45" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id45"/>
+		<transition>
+			<source ref="id43"/>
+			<target ref="id45"/>
+			<label kind="synchronisation" x="-127" y="-187">o_ch_o3?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id43"/>
+			<label kind="guard" x="8" y="-187">val==3</label>
+			<label kind="synchronisation" x="-25" y="-187">tct?</label>
+			<label kind="assignment" x="-17" y="-170">o3=true</label>
+			<nail x="51" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id45"/>
+			<label kind="guard" x="-93" y="-68">val==4 || val==1</label>
+			<label kind="synchronisation" x="-127" y="-68">tct?</label>
+			<label kind="assignment" x="-127" y="-51">BB34=(B34&gt;0? val:BB34),
+B34=(B34==0? val:B34)</label>
+			<nail x="42" y="-8"/>
+			<nail x="-136" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id44"/>
+			<target ref="id45"/>
+			<label kind="guard" x="-93" y="-153">val==0 || val==2</label>
+			<label kind="synchronisation" x="-127" y="-153">tct?</label>
+			<nail x="42" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id45"/>
+			<target ref="id44"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-68" y="-127">val=B23,
+B23=BB23,
+BB23=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK43</name>
+		<declaration>
+int val;</declaration>
+		<location id="id46" x="-59" y="-170">
+			<committed/>
+		</location>
+		<location id="id47" x="42" y="-68">
+			<name x="51" y="-102">s1</name>
+		</location>
+		<location id="id48" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id48"/>
+		<transition>
+			<source ref="id46"/>
+			<target ref="id48"/>
+			<label kind="synchronisation" x="-126" y="-187">o_ch_o3?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id47"/>
+			<target ref="id46"/>
+			<label kind="guard" x="-8" y="-187">val==3</label>
+			<label kind="synchronisation" x="-41" y="-187">tct?</label>
+			<label kind="assignment" x="-25" y="-170">o3=true</label>
+			<nail x="42" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id47"/>
+			<target ref="id48"/>
+			<label kind="guard" x="-85" y="-59">val==2 || val==1</label>
+			<label kind="synchronisation" x="-127" y="-59">tct?</label>
+			<label kind="assignment" x="-127" y="-42">BB32=(B32&gt;0? val:BB32),
+B32=(B32==0? val:B32)</label>
+			<nail x="34" y="0"/>
+			<nail x="-136" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id47"/>
+			<target ref="id48"/>
+			<label kind="guard" x="-102" y="-153">val==0 || val==4</label>
+			<label kind="synchronisation" x="-136" y="-153">tct?</label>
+			<nail x="34" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id48"/>
+			<target ref="id47"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-85" y="-127">val=B43,
+B43=BB43,
+BB43=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK34</name>
+		<declaration>
+int val;</declaration>
+		<location id="id49" x="-51" y="-170">
+			<committed/>
+		</location>
+		<location id="id50" x="51" y="-68">
+			<name x="26" y="-93">s1</name>
+		</location>
+		<location id="id51" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id51"/>
+		<transition>
+			<source ref="id49"/>
+			<target ref="id51"/>
+			<label kind="synchronisation" x="-126" y="-187">o_ch_o4?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id50"/>
+			<target ref="id49"/>
+			<label kind="guard" x="0" y="-187">val==4</label>
+			<label kind="synchronisation" x="-33" y="-187">tct?</label>
+			<label kind="assignment" x="-8" y="-170">o4=true</label>
+			<nail x="51" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id50"/>
+			<target ref="id51"/>
+			<label kind="guard" x="-93" y="-68">val==1 || val==2</label>
+			<label kind="synchronisation" x="-127" y="-68">tct?</label>
+			<label kind="assignment" x="-127" y="-51">BB41=(B41&gt;0? val:BB41),
+B41=(B41==0? val:B41)</label>
+			<nail x="42" y="-8"/>
+			<nail x="-136" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id50"/>
+			<target ref="id51"/>
+			<label kind="guard" x="-93" y="-153">val==0 || val==3</label>
+			<label kind="synchronisation" x="-127" y="-153">tct?</label>
+			<nail x="42" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id51"/>
+			<target ref="id50"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-68" y="-127">val=B34,
+B34=BB34,
+BB34=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK41</name>
+		<declaration>
+int val;</declaration>
+		<location id="id52" x="-51" y="-170">
+			<committed/>
+		</location>
+		<location id="id53" x="42" y="-68">
+			<name x="42" y="-102">s1</name>
+		</location>
+		<location id="id54" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id54"/>
+		<transition>
+			<source ref="id52"/>
+			<target ref="id54"/>
+			<label kind="synchronisation" x="-126" y="-187">o_ch_o1?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id53"/>
+			<target ref="id52"/>
+			<label kind="guard" x="0" y="-187">val==1</label>
+			<label kind="synchronisation" x="-33" y="-187">tct?</label>
+			<label kind="assignment" x="-17" y="-170">o1=true</label>
+			<nail x="42" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id53"/>
+			<target ref="id54"/>
+			<label kind="guard" x="-85" y="-59">val==2 || val==3</label>
+			<label kind="synchronisation" x="-127" y="-59">tct?</label>
+			<label kind="assignment" x="-127" y="-42">BB12=(B12&gt;0? val:BB12),
+B12=(B12==0? val:B12)</label>
+			<nail x="34" y="0"/>
+			<nail x="-136" y="0"/>
+		</transition>
+		<transition>
+			<source ref="id53"/>
+			<target ref="id54"/>
+			<label kind="guard" x="-102" y="-153">val==0 ||val==4</label>
+			<label kind="synchronisation" x="-136" y="-153">tct?</label>
+			<nail x="34" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id54"/>
+			<target ref="id53"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-85" y="-127">val=B41,
+B41=BB41,
+BB41=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>LINK14</name>
+		<declaration>
+int val;</declaration>
+		<location id="id55" x="-59" y="-170">
+			<committed/>
+		</location>
+		<location id="id56" x="51" y="-68">
+			<name x="26" y="-93">s1</name>
+		</location>
+		<location id="id57" x="-144" y="-68">
+			<name x="-186" y="-93">Wait</name>
+		</location>
+		<init ref="id57"/>
+		<transition>
+			<source ref="id55"/>
+			<target ref="id57"/>
+			<label kind="synchronisation" x="-126" y="-187">o_ch_o4?</label>
+			<nail x="-144" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id56"/>
+			<target ref="id55"/>
+			<label kind="guard" x="0" y="-187">val==4</label>
+			<label kind="synchronisation" x="-34" y="-187">tct?</label>
+			<label kind="assignment" x="-8" y="-170">o4=true</label>
+			<nail x="51" y="-170"/>
+		</transition>
+		<transition>
+			<source ref="id56"/>
+			<target ref="id57"/>
+			<label kind="guard" x="-93" y="-68">val==2 || val==3</label>
+			<label kind="synchronisation" x="-127" y="-68">tct?</label>
+			<label kind="assignment" x="-127" y="-51">BB12=(B12&gt;0? val:BB12),
+B12=(B12==0? val:B12)</label>
+			<nail x="42" y="-8"/>
+			<nail x="-136" y="-8"/>
+		</transition>
+		<transition>
+			<source ref="id56"/>
+			<target ref="id57"/>
+			<label kind="guard" x="-102" y="-153">val==0 || val==1</label>
+			<label kind="synchronisation" x="-136" y="-153">tct?</label>
+			<nail x="42" y="-127"/>
+			<nail x="-136" y="-127"/>
+		</transition>
+		<transition>
+			<source ref="id57"/>
+			<target ref="id56"/>
+			<label kind="synchronisation" x="-127" y="-127">tct?</label>
+			<label kind="assignment" x="-68" y="-127">val=B14,
+B14=BB14,
+BB14=0</label>
+		</transition>
+	</template>
+	<template>
+		<name>Stopwatch</name>
+		<declaration>clock cl;
+const int T_stabil=5, T_out=5;</declaration>
+		<location id="id58" x="-102" y="0">
+			<name x="-112" y="-34">Fail</name>
+		</location>
+		<location id="id59" x="-102" y="-136">
+			<name x="-112" y="-170">Pass</name>
+		</location>
+		<location id="id60" x="-272" y="-68">
+			<name x="-297" y="-102">Measuring</name>
+			<label kind="invariant" x="-297" y="-51">cl&lt;=T_out</label>
+		</location>
+		<location id="id61" x="-476" y="-68">
+			<name x="-486" y="-102">Wait</name>
+			<label kind="invariant" x="-510" y="-51">cl&lt;=T_stabil</label>
+		</location>
+		<init ref="id61"/>
+		<transition>
+			<source ref="id60"/>
+			<target ref="id58"/>
+			<label kind="guard" x="-187" y="-51">cl&gt;=T_out</label>
+		</transition>
+		<transition>
+			<source ref="id60"/>
+			<target ref="id59"/>
+			<label kind="synchronisation" x="-212" y="-127">stop?</label>
+		</transition>
+		<transition>
+			<source ref="id61"/>
+			<target ref="id60"/>
+			<label kind="guard" x="-399" y="-68">cl&gt;=T_stabil</label>
+			<label kind="synchronisation" x="-391" y="-93">start!</label>
+			<label kind="assignment" x="-391" y="-51">cl=0</label>
+		</transition>
+	</template>
+	<system>
+// The template LINK(i,j) models receiving a frame from link ij and sending it to the next link  j,. that leads closer to the destination. 
+// If two equal paths are possible then one is selected non-deterministically
+
+
+system Processor1_sender, Processor1_receiver, Processor2_sender, Processor2_receiver, Processor3_sender, Processor3_receiver, Processor4_sender, Processor4_receiver, Tact_gen,  LINK11, LINK22, LINK33, LINK44, LINK12, LINK21, LINK23, LINK32, LINK34, LINK43, LINK41, LINK14;
+</system>
+</nta>
