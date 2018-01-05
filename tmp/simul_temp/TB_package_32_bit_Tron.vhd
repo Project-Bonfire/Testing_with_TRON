@@ -21,14 +21,18 @@ package TB_Package is
 				   signal valid_out: in std_logic;
                                    signal credit_counter_out: out std_logic_vector(1 downto 0));
 
-  procedure gen_packet_from_file(network_size, frame_length, initial_delay, min_packet_size, max_packet_size: in integer; finish_time: in time;
+  procedure gen_packet_from_file(network_size, frame_length, initial_delay: in integer; 
+				  finish_time: in time;
                                   signal clk: in std_logic;
                                   signal credit_counter_in: in std_logic_vector(1 downto 0);
                                   signal valid_out: out std_logic;
                                   signal port_in: out std_logic_vector);
 
-  procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer; signal clk: in std_logic;
-                     signal credit_out: out std_logic; signal valid_in: in std_logic; signal port_in: in std_logic_vector);
+  procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer; 
+		       signal clk: in std_logic;
+                       signal credit_out: out std_logic; 
+		       signal valid_in: in std_logic; 
+		       signal port_in: in std_logic_vector);
 
 end TB_Package;
 
@@ -37,6 +41,7 @@ package body TB_Package is
   constant Header_type : std_logic_vector := "001";
   constant Body_type   : std_logic_vector := "010";
   constant Tail_type   : std_logic_vector := "100";
+  constant Packet_length : integer := 3; 
 
  --function Header_gen(Packet_length, source, destination, packet_id: integer)
  --            return std_logic_vector is
@@ -47,7 +52,7 @@ package body TB_Package is
  --                  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination, 4)) &
  --                  std_logic_vector(to_unsigned(source, 4))  & std_logic_vector(to_unsigned(packet_id, 8)));
  --   return Header_flit;
- -- end Header_gen;/%
+ -- end Header_gen;
 
 
  -- function Body_gen(Packet_length, Data: integer)
@@ -106,7 +111,7 @@ procedure credit_counter_control(
   end credit_counter_control;
 
   procedure gen_packet_from_file(
-                      network_size, source, frame_length, initial_delay, min_packet_size, max_packet_size: in integer;
+                      network_size, frame_length, initial_delay : in integer; --min_packet_size, max_packet_size frame length 3 means only 1 packet with 3 flits at a time
                       finish_time: in time;
                       signal clk: in std_logic;
                       signal credit_counter_in: in std_logic_vector(1 downto 0);
@@ -118,56 +123,52 @@ procedure credit_counter_control(
                       -- signal bodyvalue : in std_logic_vector(1 downto 0);
                       -- signal tailvalue : in std_logic_vector(1 downto 0);
 
-                      variable seed1 :positive ;
-                      variable seed2 :positive ;
-                      variable rand : real ;
-                      constant min_packet_size_value, max_packet_size_value: integer := 3;
-                      variable INPUTLINE  : line;
-                      variable values     : std_logic_vector(61 downto 0);
+                  --    variable seed1 :positive ;
+                  --    variable seed2 :positive ;
+                  --    variable rand : real ;
+                  --    constant min_packet_size_value, max_packet_size_value: integer := 3;
+                      variable INPUTLINE : line;
+                      variable values : std_logic_vector(61 downto 0); -- we can change the format of values datatype as per the type provided by the adapter output file
                       variable destination_id: integer;
                       variable source_id: integer;
                       variable body_data: integer;
                       variable tail_data: integer;
-                      variable id_counter, Packet_length,frame_starting_delay,frame_ending_delay: integer:= 0;
+                      variable id_counter,frame_starting_delay,frame_ending_delay: integer:= 0;
                       variable credit_counter: std_logic_vector (1 downto 0);
-                      file file_VECTORS : text open read_mode is “testgen.txt”;
+                      file file_handler : text open read_mode is “testgen.txt”;
                       
 begin
 
-
-  while not endfile(file_VECTORS) loop
-      readline(file_VECTORS, INPUTLINE);
+      readline(file_handler, INPUTLINE);
       read(INPUTLINE, values);
-      -- Pass the variable to a signal to allow the HEADER use it
-    --  totalvalue <= values;
-    --  sourcevalue <= totalvalue(68 downto 67); -- store 2 bit values
+-- store 2 bit values
       source_id := to_integer(unsigned(values(61 downto 60)));
-    -- destinationvalue <= totalvalue(66 downto 65); -- store 2 bit values
+--store 2 bit values
       destination_id := to_integer(unsigned(values(59 downto 58)));
-    --  bodyvalue <= totalvalue(64 downto 32); -- store 32 bit values
+-- store 32 bit values
       body_data := to_integer(unsigned(values(57 downto 29)));
-    --  tailvalue <= totalvalue(31 downto 0); -- store 32 bit values
+-- store 32 bit values
       tail_data := to_integer(unsigned(values(28 downto 0)));
 
-      if (source /= source_id) then
-	  readline(file_VECTORS,INPUTLINE);
-	  read(INPUTLINE, values);
+    --  if (source /= source_id) then
+    --  readline(file_VECTORS,INPUTLINE);
+    --	  read(INPUTLINE, values);
 	  
-	  source_id := to_integer(unsigned(values(61 downto 60)));
+    --	  source_id := to_integer(unsigned(values(61 downto 60)));
     -- destinationvalue <= totalvalue(66 downto 65); -- store 2 bit values
-     	 destination_id := to_integer(unsigned(values(59 downto 58)));
+    -- 	 destination_id := to_integer(unsigned(values(59 downto 58)));
     --  bodyvalue <= totalvalue(64 downto 32); -- store 32 bit values
-     	 body_data := to_integer(unsigned(values(57 downto 29)));
+    -- 	 body_data := to_integer(unsigned(values(57 downto 29)));
     --  tailvalue <= totalvalue(31 downto 0); -- store 32 bit values
-     	 tail_data := to_integer(unsigned(values(28 downto 0)));
+    --	 tail_data := to_integer(unsigned(values(28 downto 0)));
      
-     elsif (source = source_id) then
+    -- elsif (source = source_id) then
       
-      min_packet_size:= min_packet_size_value;
-      max_packet_size:= max_packet_size_value;
+    --  min_packet_size:= min_packet_size_value;
+    --  max_packet_size:= max_packet_size_value;
+    	
 
-
-      Packet_length := integer((integer(rand*100.0)*frame_length)/100);
+     -- Packet_length := integer((integer(rand*100.0)*frame_length)/100);
       valid_out <= '0';
       port_in <= "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" ;
       wait until clk'event and clk ='1';
@@ -177,10 +178,10 @@ begin
       port_in <= "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU" ;
 
       --generating the frame initial delay
-      uniform(seed1, seed2, rand);
-      frame_starting_delay := 0;
+      --uniform(seed1, seed2, rand);
+      --frame_starting_delay := 0;
       --generating the frame ending delay
-      frame_ending_delay := frame_length - (Packet_length+frame_starting_delay);
+      --frame_ending_delay := frame_length - (Packet_length+frame_starting_delay);
 
       wait until clk'event and clk ='0';
       valid_out <= '0';
@@ -192,44 +193,54 @@ begin
     -- generating the packet what we need id counter for
       id_counter := id_counter + 1;
       if id_counter = 256 then
-          id_counter := 0;
+         id_counter := 0;
       end if;
   --------------------------------------
-      uniform(seed1, seed2, rand);
-      Packet_length := integer((integer(rand*100.0)*frame_length)/100);
-      if (Packet_length < min_packet_size) then
-          Packet_length:=min_packet_size;
-      end if;
-      if (Packet_length > max_packet_size) then
-          Packet_length:=max_packet_size;
-      end if;
+    --  uniform(seed1, seed2, rand);
+    --  Packet_length := integer((integer(rand*100.0)*frame_length)/100);
+    --  if (Packet_length < min_packet_size) then
+    --      Packet_length:=min_packet_size;
+    --  end if;
+    --  if (Packet_length > max_packet_size) then
+     --     Packet_length:=max_packet_size;
+     -- end if;
   --------------------------------------
           --destination_id := integer(rand*real((network_size**2)-1));
-          destination_id := to_integer(unsigned(values(59 downto 58)));
-          while (destination_id = source) loop
+       --   destination_id := to_integer(unsigned(values(59 downto 58)));
+       --   while (destination_id = source) loop
             --  uniform(seed1, seed2, rand);
             --  destination_id := integer(rand*real((network_size**2)-1));
-              destination_id := to_integer(unsigned(values(59 downto 58)));
-          end loop;
+       --       destination_id := to_integer(unsigned(values(59 downto 58)));
+       --   end loop;
   --------------------------------------
           wait until clk'event and clk ='0'; -- On negative edge of clk (for syncing purposes)
-                port_in <= Header_gen(Packet_length, source_id, destination_id, id_counter); -- Generating the header flit of the packet (All packets have a header flit)!
-                valid_out <= '1';
+             --   port_in <= Header_gen(Packet_length, source_id, destination_id, id_counter); -- Generating the header flit of the packet (All packets have a header flit)! not using it as we donot use function we insert direct values
+	          port_in <= Header_type &  std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination_id, 4)) &
+                   std_logic_vector(to_unsigned(source_id, 4))  & std_logic_vector(to_unsigned(id_counter, 8)) & XOR_REDUCE(Header_type &
+                   std_logic_vector(to_unsigned(Packet_length, 12)) & std_logic_vector(to_unsigned(destination_id, 4)) &
+                   std_logic_vector(to_unsigned(source_id, 4))  & std_logic_vector(to_unsigned(id_counter, 8)));              
+
+		  valid_out <= '1';
   --------------------------------------
-			for I in 0 to Packet_length-3 loop
+			--for I in 0 to 3 loop (we comment this because so far we have only one body)
               -- The reason for -3 is that we have packet length of Packet_length, now if you exclude header and tail
               -- it would be Packet_length-2 to enumerate them, you can count from 0 to Packet_length-3.
               if credit_counter_in = "00" then
                valid_out <= '0';
+
                -- Wait until next router/NI has at least enough space for one flit in its input FIFO
+
                wait until credit_counter_in'event and credit_counter_in > 0;
                wait until clk'event and clk ='0';
               end if;
+			  
           wait until clk'event and clk ='0';
-                port_in <= Body_gen(Packet_length,body_data);
+               -- port_in <= Body_gen(Packet_length,body_data); -- here we send the body
+		port_in <= Body_type &  std_logic_vector(to_unsigned( body_data, 28)) & XOR_REDUCE(Body_type & std_logic_vector(to_unsigned( body_data, 28)));
                 valid_out <= '1';
           wait until clk'event and clk ='0';
-    end loop;
+   -- end loop;		
+				
   --------------------------------------
 			 if credit_counter_in = "00" then
 				 valid_out <= '0';
@@ -238,8 +249,9 @@ begin
 				 wait until clk'event and clk ='0';
 			end if;
 -----------------------------------------
-          port_in <= Tail_gen(Packet_length, tail_data);
-              valid_out <= '1';
+         -- port_in <= Tail_gen(Packet_length, tail_data);
+              port_in <=  Tail_type &  std_logic_vector(to_unsigned(tail_data, 28)) & XOR_REDUCE(Tail_type & std_logic_vector(to_unsigned(tail_data, 28)));
+	      valid_out <= '1';
               wait until clk'event and clk ='0';
               valid_out <= '0';
               port_in <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" ;
