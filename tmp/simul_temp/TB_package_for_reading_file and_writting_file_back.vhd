@@ -183,7 +183,7 @@ begin
 		  
   end gen_packet_from_file;
 
-  procedure get_packet(DATA_WIDTH, initial_delay, Node_ID: in integer; --initial_delaywaits for this no. of clock cycles before sending the packet!
+  procedure get_packet(DATA_WIDTH, initial_delay: in integer; --initial_delaywaits for this no. of clock cycles before sending the packet!
                        signal clk: in std_logic;
                        signal valid_in: in std_logic;
                        signal port_in: in std_logic_vector;
@@ -205,7 +205,7 @@ begin
                 destination_node := to_integer(unsigned(port_in(16 downto 13)));
                 source_node := to_integer(unsigned(port_in(12 downto 9)));
                 packet_id := to_integer(unsigned(port_in(8 downto 1)));
-			  end if;
+	 end if;
 			  
               if  (port_in(DATA_WIDTH-1 downto DATA_WIDTH-3) = "010")   then
                report "flit type: " &integer'image(to_integer(unsigned(port_in(DATA_WIDTH-1 downto DATA_WIDTH-3)))) ;
