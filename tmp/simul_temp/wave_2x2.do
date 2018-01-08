@@ -115,15 +115,6 @@ add wave -noupdate -group {LBDR CX} -color green :tb_network_2x2:NoC:R_3:LBDR_W:
 add wave -noupdate -group {LBDR CX} -color green :tb_network_2x2:NoC:R_3:LBDR_S:Cx
 add wave -noupdate -group {LBDR CX} -color Gold :tb_network_2x2:NoC:R_3:LBDR_L:Cx
 
-add wave -noupdate -group {UART WRITE} -color Gold :tb_network_2x2:PE_0:u1_plasma:u3_uart:uart_write
-add wave -noupdate -group {UART WRITE} -color Gold :tb_network_2x2:PE_1:u1_plasma:u3_uart:uart_write
-add wave -noupdate -group {UART WRITE} -color Gold :tb_network_2x2:PE_2:u1_plasma:u3_uart:uart_write
-add wave -noupdate -group {UART WRITE} -color Gold :tb_network_2x2:PE_3:u1_plasma:u3_uart:uart_write
-
-add wave -noupdate -group {UART READ} -color green :tb_network_2x2:PE_0:u1_plasma:u3_uart:uart_read
-add wave -noupdate -group {UART READ} -color green :tb_network_2x2:PE_1:u1_plasma:u3_uart:uart_read
-add wave -noupdate -group {UART READ} -color green :tb_network_2x2:PE_2:u1_plasma:u3_uart:uart_read
-add wave -noupdate -group {UART READ} -color green :tb_network_2x2:PE_3:u1_plasma:u3_uart:uart_read
 
 TreeUpdate [SetDefaultTree]
 WaveRestoreCursors

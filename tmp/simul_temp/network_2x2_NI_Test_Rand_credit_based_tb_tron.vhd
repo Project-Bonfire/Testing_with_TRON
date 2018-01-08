@@ -96,16 +96,16 @@ not_reset <= not reset;
 
 -- connecting the packet generators
 credit_counter_control(clk, credit_out_L_0, valid_in_L_0, credit_counter_out_0);
-gen_random_packet(2, 3, 10000 ns, clk, credit_counter_out_0, valid_in_L_0, RX_L_0); -- if i have no source then how it will check which port coming from
+gen_packet_from_file(2, 3, 0, 10000 ns, clk, credit_counter_out_0, valid_in_L_0, RX_L_0); -- if i have no source then how it will check which port coming from
 
 credit_counter_control(clk, credit_out_L_1, valid_in_L_1, credit_counter_out_1);
-gen_random_packet(2, 3, 10000 ns, clk, credit_counter_out_1, valid_in_L_1, RX_L_1);
+gen_packet_from_file(2, 3, 0, 10000 ns, clk, credit_counter_out_1, valid_in_L_1, RX_L_1);
 
 credit_counter_control(clk, credit_out_L_2, valid_in_L_2, credit_counter_out_2);
-gen_random_packet(2, 3, 10000 ns, clk, credit_counter_out_2, valid_in_L_2, RX_L_2);
+gen_packet_from_file(2, 3, 0, 10000 ns, clk, credit_counter_out_2, valid_in_L_2, RX_L_2);
 
 credit_counter_control(clk, credit_out_L_3, valid_in_L_3, credit_counter_out_3);
-gen_random_packet(2, 3, 10000 ns, clk, credit_counter_out_3, valid_in_L_3, RX_L_3);
+gen_packet_from_file(2, 3, 0, 10000 ns, clk, credit_counter_out_3, valid_in_L_3, RX_L_3);
 
 
 -- connecting the packet receivers
