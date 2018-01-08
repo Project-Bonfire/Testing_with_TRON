@@ -17,6 +17,7 @@ package TB_Package is
 
   procedure gen_packet_from_file(network_size, frame_length, initial_delay: in integer;
 				  finish_time: in time;
+          stim_file: in  string;
                                   signal clk: in std_logic;
                                   signal credit_counter_in: in std_logic_vector(1 downto 0);
                                   signal valid_out: out std_logic;
@@ -67,10 +68,12 @@ procedure credit_counter_control(
 
   procedure gen_packet_from_file(network_size, frame_length, initial_delay : in integer;
                       finish_time: in time;
+                      stim_file: in  string;
                       signal clk: in std_logic;
                       signal credit_counter_in: in std_logic_vector(1 downto 0);
                       signal valid_out: out std_logic;
-                      signal port_in : out std_logic_vector) is
+                      signal port_in : out std_logic_vector
+                       ) is
 
                       variable values_bv : bit_vector(61 downto 0); -- we can change the format of values datatype as per the type provided by the adapter output file
                       variable values : std_logic_vector(61 downto 0); -- we can change the format of values datatype as per the type provided by the adapter output file
@@ -81,10 +84,10 @@ procedure credit_counter_control(
                       variable frame_starting_delay,frame_ending_delay: integer:= 0;
                       variable credit_counter: std_logic_vector (1 downto 0);
 		      variable INPUTLINE : line;
-          file file_handler : text open read_mode is "testgen.txt";
+          file file_handler : text open read_mode is stim_file;
 
 begin
-
+    while not endfile(file_handler) loop
       readline(file_handler, INPUTLINE);
       read(INPUTLINE, values_bv);
       values := To_StdLogicVector(values_bv);
@@ -150,23 +153,17 @@ begin
 				 wait until clk'event and clk ='0';
 			end if;
 -----------------------------------------
-
-
 			port_in <=  Tail_type &  std_logic_vector(to_unsigned(tail_data, 28)) & XOR_REDUCE(Tail_type & std_logic_vector(to_unsigned(tail_data, 28)));
 			valid_out <= '1';
 				wait until clk'event and clk ='0';
 				valid_out <= '0';
 				port_in <= "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ" ;
 ------------------------------------------
-          for l in 0 to frame_ending_delay-1 loop
-             wait until clk'event and clk ='0';
-          end loop;
-          port_in <= "UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU" ;
-
           if now > finish_time then
               wait;
           end if;
-
+    end loop;
+    wait;
   end gen_packet_from_file;
 
   procedure get_packet(DATA_WIDTH, initial_delay: in integer; --initial_delaywaits for this no. of clock cycles before sending the packet!
@@ -177,12 +174,13 @@ begin
                         ) is
 			variable source_node, destination_node, P_length, packet_id, counter, body_data_read, tail_data_read: integer;
 			variable LINEVARIABLE : line;
-			file VEC_FILE : text is out "outputfile.txt";
+			file VEC_FILE : text ;
 
      begin
+      file_open(VEC_FILE,"outputfile.txt",APPEND_MODE);
      credit_out <= '1';
      counter := 0;
-
+     while true loop
          wait until clk'event and clk ='1';
 
          if valid_in = '1' then
@@ -192,29 +190,31 @@ begin
                 destination_node := to_integer(unsigned(port_in(16 downto 13)));
                 source_node := to_integer(unsigned(port_in(12 downto 9)));
                 packet_id := to_integer(unsigned(port_in(8 downto 1)));
-	      end if;
+	            end if;
 
               if  (port_in(DATA_WIDTH-1 downto DATA_WIDTH-3) = "010")   then
-		      counter := counter+1;
-		      body_data_read := to_integer(unsigned(port_in(28 downto 1)));
+        		      counter := counter+1;
+        		      body_data_read := to_integer(unsigned(port_in(28 downto 1)));
               end if;
 
-		if (port_in(DATA_WIDTH-1 downto DATA_WIDTH-3) = "100") then
-                	counter := counter+1;
-             		tail_data_read := to_integer(unsigned(port_in(28 downto 1)));
-
-			report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) & "with tail:" & integer'image(tail_data_read);
-
-			write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read));
-			writeline(VEC_FILE, LINEVARIABLE);
-
-      		else
-			write(LINEVARIABLE, "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body: "& integer'image(body_data_read) &  "with tail:" & integer'image(tail_data_read));
-			writeline(VEC_FILE, LINEVARIABLE);
+    		      if (port_in(DATA_WIDTH-1 downto DATA_WIDTH-3) = "100") then
+                  counter := counter+1;
+                 	tail_data_read := to_integer(unsigned(port_in(28 downto 1)));
+    			        report "Packet received from" & integer'image(source_node) & " to " & integer'image(destination_node) & "with body:" & integer'image(body_data_read) & "with tail:" & integer'image(tail_data_read);
+                  write(LINEVARIABLE, "Packet received from " & integer'image(source_node) & " to " & integer'image(destination_node) & " with body: "& integer'image(body_data_read) &  " with tail: " & integer'image(tail_data_read));
+                  writeline(VEC_FILE, LINEVARIABLE);
+                  counter := 0;
+                  P_length:= 0;
+                  destination_node:= 0;
+                  source_node:= 0;
+                  packet_id:= 0;
+                  body_data_read:= 0;
+                  tail_data_read:= 0;
               end if;
-              		 counter := 0;
+
+
        end if;
-
+     end loop;
   end get_packet;
 
 end TB_Package;
