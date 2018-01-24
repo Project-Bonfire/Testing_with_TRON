@@ -1,4 +1,4 @@
-package com.uppaal.chip;
+package com.uppaal.chiporiginal;
 
 import com.uppaal.tron.Reporter;
 
@@ -14,10 +14,10 @@ public interface ChipInterface
     
     public void setReporter(Reporter r);
 
-    public void handleMyInput1() throws InterruptedException;
-    public void handleMyInput2() throws InterruptedException;
-    public void handleMyInput3() throws InterruptedException;
-    public void handleMyInput4() throws InterruptedException;
+    public void handleMyInput1(int sourceNode, int destinationNode) throws InterruptedException;
+    public void handleMyInput2(int sourceNode, int destinationNode) throws InterruptedException;
+    public void handleMyInput3(int sourceNode, int destinationNode) throws InterruptedException;
+    public void handleMyInput4(int sourceNode, int destinationNode) throws InterruptedException;
     
     
     

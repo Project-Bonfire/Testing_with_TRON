@@ -1,4 +1,4 @@
-package com.uppaal.chip;
+package com.uppaal.chiporiginal;
 
 import com.uppaal.tron.Reporter;
 
